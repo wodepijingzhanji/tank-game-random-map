@@ -16,16 +16,22 @@ if __name__ == '__main__':
 
     # 窗体
     window = pygame.display.set_mode((w, h))
-    screen = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT))
+    screen1 = pygame.Surface((WINDOW_WIDTH, WINDOW_HEIGHT))
+    screen0 = pygame.Surface((400, 268))
+    # screen0 = pygame.Surface((135, 107))
     # print(WINDOW_WIDTH, WINDOW_HEIGHT)
     pygame.display.set_caption("坦克大战")
 
     # 两个页面
-    start = StartPage(screen)
-    game = GamePage(screen)
-
+    start = StartPage(screen0)
+    # game = GamePage(screen)
+    current = 0
     while True:
-        current = getCurrent()
+        new = getCurrent()
+        if current != new:
+            current = new
+            start = StartPage(screen0)
+            game = GamePage(screen1)
         # 判断页面
         page = None
         if current == 0:
@@ -36,7 +42,7 @@ if __name__ == '__main__':
         # 渲染页面
         page.graphic()
 
-        pygame.transform.scale(screen, (w, h), window)
+        pygame.transform.scale(eval('screen%d' % current), (w, h), window)
         pygame.display.flip()
 
         events = pygame.event.get()

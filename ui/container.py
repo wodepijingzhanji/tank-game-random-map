@@ -158,7 +158,7 @@ class GameContainer:
         self.surface.fill((0x00, 0x00, 0x00))
 
         # 制造道具
-        if random.randint(1, 100) == 1:
+        if random.randint(1, 300) == 1:
             n = random.randint(0, len(self.positionAirs) - 1)
             x = self.positionAirs[n][0]
             y = self.positionAirs[n][1]
