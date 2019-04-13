@@ -22,7 +22,7 @@ class GameContainer:
         self.displays = []
         self.positionEs = []
         self.positionEa = ()
-        self.positionAirs = []
+        self.positionAirs = []  # 符文诞生地
         self.numbers = []
         # 随机生成一个地图
         self.mapTB = MapTB()
@@ -45,16 +45,20 @@ class GameContainer:
                     self.views.append(Water(surface=self.surface, x=x, y=y))
                 if text == "草":
                     self.views.append(Grass(surface=self.surface, x=x, y=y))
+                    self.positionAirs.append((x + BLOCK / 2, y + BLOCK / 2))
                 if text == '空':
                     self.positionAirs.append((x + BLOCK / 2, y + BLOCK / 2))
                 if text == "主":
                     self.player1 = PlayerTank(surface=self.surface, x=x, y=y, hp=20)
                     self.views.append(self.player1)
+                    self.positionAirs.append((x + BLOCK / 2, y + BLOCK / 2))
                 if text == "副":
                     self.player2 = PlayerTank(surface=self.surface, x=x, y=y, hp=20)
                     self.views.append(self.player2)
+                    self.positionAirs.append((x + BLOCK / 2, y + BLOCK / 2))
                 if text == '敌':
                     self.positionEs.append((x, y))
+                    self.positionAirs.append((x + BLOCK / 2, y + BLOCK / 2))
                 if text == '鹰':
                     self.eagle = Eagle(surface=self.surface, x=x, y=y)
                     self.views.append(self.eagle)
@@ -154,12 +158,16 @@ class GameContainer:
         self.surface.fill((0x00, 0x00, 0x00))
 
         # 制造道具
-        if random.randint(1, 500) == 1:
+        if random.randint(1, 100) == 1:
             n = random.randint(0, len(self.positionAirs) - 1)
             x = self.positionAirs[n][0]
             y = self.positionAirs[n][1]
             aProp = random.choice(['Timer', 'BlowUp', 'Star'])
             prop = eval(aProp)(x=x, y=y, surface=self.surface)
+            for oldProp in self.props:
+                if prop.get_rect().colliderect(oldProp.get_rect()):
+                    oldProp.setDestroyed()
+                    self.props.remove(oldProp)
             self.views.append(prop)
             self.props.append(prop)
         # 制造敌方坦克
@@ -170,6 +178,7 @@ class GameContainer:
             for block in self.views:
                 vRect = pygame.Rect(block.x, block.y, block.width, block.height)
                 if vRect.colliderect(pygame.Rect(x, y, BLOCK, BLOCK)) and isinstance(block, Block):
+                    # if block.get_rect().colliderect(pygame.Rect(x, y, BLOCK, BLOCK)) and isinstance(block, Block):    #利用Display的get_rect()方法更简介
                     break
             else:
                 if self.getXinXi()['敌军数量'] < 6 and self.getXinXi()['敌军数量'] < self.getXinXi()['剩余敌军']:
@@ -229,6 +238,10 @@ class GameContainer:
                     self.getXinXi()['敌军数量'] -= 1
                 if isinstance(view, Born):
                     self.views.append(EnemyTank(surface=self.surface, x=view.x, y=view.y, hp=6))
+                if isinstance(view, Armor):
+                    self.positionAirs.extend(view.ceters)
+                elif isinstance(view, Wall):
+                    self.positionAirs.append((view.x + BLOCK / 2, view.y + BLOCK / 2))
                 self.__add_view(view.display_destroy())
 
         # 遍历列表，让所有的元素显示

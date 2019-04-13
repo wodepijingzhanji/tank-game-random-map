@@ -253,29 +253,38 @@ class Armor(Wall):
         self.image_height = self.image.get_height()
         self.surface = kwargs["surface"]
         self.numbers = kwargs["numbers"]
-        self.positions = []
+        self.positions = []  # 小墙坐标
+        self.ceters = []  # 鹰周围不超过八块的区域的中心，护甲被摧毁后可以生成符文时需要用到这个参数
         for number in self.numbers:
             if number == '一':
                 self.positions.append(
                     (self.ceter_x - BLOCK / 2 - self.image_width, self.ceter_y - BLOCK / 2 - self.image_height))
+                self.ceters.append((self.ceter_x - BLOCK, self.ceter_y - BLOCK))
             if number == '二':
                 self.positions.append((self.ceter_x - BLOCK / 2, self.ceter_y - BLOCK / 2 - self.image_height))
                 self.positions.append((self.ceter_x, self.ceter_y - BLOCK / 2 - self.image_height))
+                self.ceters.append((self.ceter_x, self.ceter_y - BLOCK))
             if number == '三':
                 self.positions.append((self.ceter_x + BLOCK / 2, self.ceter_y - BLOCK / 2 - self.image_height))
+                self.ceters.append((self.ceter_x + BLOCK, self.ceter_y - BLOCK))
             if number == '四':
                 self.positions.append((self.ceter_x + BLOCK / 2, self.ceter_y - BLOCK / 2))
                 self.positions.append((self.ceter_x + BLOCK / 2, self.ceter_y))
+                self.ceters.append((self.ceter_x + BLOCK, self.ceter_y ))
             if number == '五':
                 self.positions.append((self.ceter_x + BLOCK / 2, self.ceter_y + BLOCK / 2))
+                self.ceters.append((self.ceter_x + BLOCK, self.ceter_y + BLOCK))
             if number == '六':
                 self.positions.append((self.ceter_x, self.ceter_y + BLOCK / 2))
                 self.positions.append((self.ceter_x - BLOCK / 2, self.ceter_y + BLOCK / 2))
+                self.ceters.append((self.ceter_x, self.ceter_y + BLOCK))
             if number == '七':
                 self.positions.append((self.ceter_x - BLOCK / 2 - self.image_width, self.ceter_y + BLOCK / 2))
+                self.ceters.append((self.ceter_x - BLOCK, self.ceter_y + BLOCK))
             if number == '八':
                 self.positions.append((self.ceter_x - BLOCK / 2 - self.image_width, self.ceter_y))
                 self.positions.append((self.ceter_x - BLOCK / 2 - self.image_width, self.ceter_y - BLOCK / 2))
+                self.ceters.append((self.ceter_x - BLOCK, self.ceter_y))
         self.x = min([position[0] for position in self.positions])
         self.y = min([position[1] for position in self.positions])
         # print(self.numbers)
