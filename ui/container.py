@@ -313,7 +313,7 @@ class GameContainer:
         for attack in self.views:
             if isinstance(attack, Attack):
                 for beaten in self.views:
-                    if isinstance(beaten, Beaten) and attack.is_attacked(beaten):
+                    if isinstance(beaten, Beaten) and attack.is_attacked(beaten) and attack!=beaten:
                         # 判断子弹和墙是否发生碰撞
 
                         # 根据子弹的杀伤力和墙的生命值

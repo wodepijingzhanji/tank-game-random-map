@@ -30,7 +30,7 @@ class StartPage:
 
     def keydown(self, key):
         """按下事件"""
-        print(key)
+        # print(key)
         if key == K_RETURN:
             # 显示game
             setCurrent(1)

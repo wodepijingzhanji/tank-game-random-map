@@ -270,7 +270,7 @@ class Armor(Wall):
             if number == '四':
                 self.positions.append((self.ceter_x + BLOCK / 2, self.ceter_y - BLOCK / 2))
                 self.positions.append((self.ceter_x + BLOCK / 2, self.ceter_y))
-                self.ceters.append((self.ceter_x + BLOCK, self.ceter_y ))
+                self.ceters.append((self.ceter_x + BLOCK, self.ceter_y))
             if number == '五':
                 self.positions.append((self.ceter_x + BLOCK / 2, self.ceter_y + BLOCK / 2))
                 self.ceters.append((self.ceter_x + BLOCK, self.ceter_y + BLOCK))
@@ -445,7 +445,13 @@ class Star(Display, Order, Destroy):
         return 400
 
 
-class Bullet(Display, AutoMove, Destroy, Attack):
+class Bullet(Display, AutoMove, Destroy, Attack, Beaten):
+
+    def get_hp(self):
+        pass
+
+    def receive_beaten(self, power):
+        pass
 
     def __init__(self, **kwargs):
         self.image = pygame.image.load(kwargs["missile"])
@@ -469,6 +475,15 @@ class Bullet(Display, AutoMove, Destroy, Attack):
         self.__is_destroyed = False
         # 杀伤力
         self.power = 4
+        # 血量
+        self.hp = 4
+
+    def get_hp(self):
+        return self.hp
+
+    def receive_beaten(self, power):
+        """power 打我者的杀伤力"""
+        self.hp -= power
 
     def display(self):
         self.surface.blit(self.image, (self.x, self.y))
